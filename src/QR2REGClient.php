@@ -2,21 +2,22 @@
 
 namespace QR2REG;
 
+use GuzzleHttp\Client;
+
 class QR2REGClient
 {
-    const URL = 'https://stage.qr2reg-api.vivifyideas.com/api/oauth/exchange?authorization_code=';
+    const BASE_URL = 'https://stage.qr2reg-api.vivifyideas.com/api/';
+    const EXCHANGE_ENDPOINT_URL = 'oauth/exchange?authorization_code=';
 
     public function __construct()
     {
-        $this->httpClient = new \Guzzle\Http\Client();
+        $this->httpClient = new Client([ 'base_uri' => self::BASE_URL ]);
     }
 
     public function exchangeAuthorizationCode($authorizationCode)
     {
-        $request = $this->httpClient->get(self::URL . $authorizationCode);
-        $response = $this->httpClient->send($request);
+        $response = $this->httpClient->get(self::EXCHANGE_ENDPOINT_URL . $authorizationCode);
 
-        return json_decode($response->getBody(), true);
+        return json_decode($response->getBody());
     }
 }
-
