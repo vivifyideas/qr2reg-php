@@ -1,0 +1,3 @@
+# QR2REG PHP
+
+QR2REG Client for PHP.
