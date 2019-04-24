@@ -5,18 +5,25 @@ namespace QR2REG;
 use Exception;
 use GuzzleHttp\Client;
 
-use QR2REG\QR2REGUnauthorizedException;
-
 class QR2REGClient
 {
     const CIPHER = 'AES-256-CBC';
 
+    const QR2REG_SECRET_ENV_KEY = 'QR2REG_APPLICATION_SECRET';
+
     const BASE_URL = 'https://stage.qr2reg-api.vivifyideas.com/api/';
     const EXCHANGE_ENDPOINT_URL = 'oauth/exchange?authorization_code=';
 
-    public function __construct($applicationSecret)
+    public function __construct()
     {
-        $this->applicationSecret = $applicationSecret;
+        $this->applicationSecret = getenv(self::QR2REG_SECRET_ENV_KEY);
+
+        if (!$this->applicationSecret) {
+            throw new QR2REGApplicationSecretNotFoundException(
+                "You must set your application's secret in your .env file under the key 'QR2REG_APPLICATION_SECRET'."
+            );
+        }
+
         $this->httpClient = new Client([ 'base_uri' => self::BASE_URL ]);
     }
 
