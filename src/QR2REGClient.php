@@ -14,16 +14,15 @@ class QR2REGClient
     const BASE_URL = 'https://stage.qr2reg-api.vivifyideas.com/api/';
     const EXCHANGE_ENDPOINT_URL = 'oauth/exchange?authorization_code=';
 
-    public function __construct()
+    public function __construct($applicationSecret)
     {
-        $this->applicationSecret = getenv(self::QR2REG_SECRET_ENV_KEY);
-
-        if (!$this->applicationSecret) {
+        if (!$applicationSecret) {
             throw new QR2REGApplicationSecretNotFoundException(
-                "You must set your application's secret in your .env file under the key 'QR2REG_APPLICATION_SECRET'."
+                "Please provide your application secret."
             );
         }
 
+        $this->applicationSecret = $applicationSecret;
         $this->httpClient = new Client([ 'base_uri' => self::BASE_URL ]);
     }
 
